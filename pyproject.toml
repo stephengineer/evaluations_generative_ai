@@ -1,0 +1,61 @@
+[project]
+name = "sut-eval"
+version = "0.1.0"
+description = "SUT Evaluation"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "azure-storage-blob>=12.28.0",
+    "dotenv>=0.9.9",
+    "langsmith>=0.5.0",
+    "openai>=2.13.0",
+    "openevals>=0.1.3",
+    "pandas>=2.3.3",
+    "pydantic>=2.12.5",
+    "anthropic>=0.84.0",
+    "mcp>=1.26.0",
+    "langchain-openai>=1.1.11",
+    "langchain-core>=1.2.19",
+]
+
+[dependency-groups]
+dev = [
+    "deptry>=0.24.0",
+    "pytest>=9.0.2",
+    "ruff>=0.14.8",
+    "mypy>=1.13.0",
+    "black>=25.12.0",
+    "pandas-stubs>=2.3.3.251219",
+    "types-requests>=2.32.0",
+    "matplotlib>=3.10.8",
+]
+
+[tool.ruff]
+exclude = ["*.ipynb"]
+
+[tool.deptry]
+exclude = ["tests", "build", ".venv", "scripts"]
+ignore_notebooks = true
+known_first_party = ["src"]
+
+[tool.mypy]
+python_version = "3.13"
+warn_return_any = true
+warn_unused_configs = true
+ignore_missing_imports = true
+explicit_package_bases = true
+mypy_path = ["."]
+exclude = ["scripts/"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests", "scripts"]
+filterwarnings = [
+    "ignore:.*langsmith.wrappers._openai_agents.*:DeprecationWarning",
+    "ignore::DeprecationWarning:gevent.*",
+]
+
+[tool.sut-eval.versions]
+# Component-specific versions
+# Main project version is in [project].version above
+evaluation = "0.1.0"
+data_management = "0.1.1"

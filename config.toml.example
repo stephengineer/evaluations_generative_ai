@@ -1,0 +1,52 @@
+[evaluation]
+dataset_name = "SUT Benchmark"
+experiment_prefix = "sut-script-eval"
+max_concurrency = 1
+
+# For now only azure_openai is supported for judge_provider
+judge_provider = "azure_openai"          # "azure_openai"
+judge_model = "gpt-5-mini"
+query_generator_provider = ""   # defaults to judge_provider when empty
+
+# Standard benchmark evaluators:
+evaluators = ["relevance", "correctness", "agent_match", "report_agent_data"]
+
+# AI provider evaluation: LLM generates realistic user queries from dataset input
+ai_provider = true
+max_turns = 10
+query_generator_model = ""       # defaults to judge_model when empty
+query_generator_temperature = 0.7
+query_generator_user_style = "normal"  # "brief" | "normal" | "verbose" | "random" (vary per example)
+
+[evaluation.client]
+type = "script"           # "script" | "mcp" | "opensource"
+mode = "single_round"     # "single_round" | "multi_round"
+cwd = "/absolute/path/to/working/directory"    # working directory for the script (e.g. project root)
+script_path = "/absolute/path/to/working/directory/conversation_service.py"  # absolute path to the script file
+timeout = 60
+
+[evaluation.client.opensource]
+model_name = "gpt-5-mini"
+
+[dataset]
+name = "SUT Benchmark"
+description = "Benchmark dataset for SUT evaluation"
+csv_files = ["SUTBenchmark.csv"]
+
+[dataset.sync]
+delete_orphans = false
+
+[datagen]
+mcp_server_url = "http://127.0.0.1:8000/mcp/"
+model = "claude-opus-4-6"
+batch_size = 5
+temperature = 0.8
+max_tokens = 16384
+
+[client_server]
+raw_data_dir = "data/azure_blob_storage/client_server_chat_data"
+processed_data_dir = "data/azure_blob_storage/processed_client_server_chat_data"
+default_year = "2026"
+default_count = 0           # 0 = process all conversations
+classifier_model = "gpt-5-mini"
+classifier_chunk_size = 20  # conversations per chunk file (for progress tracking)
